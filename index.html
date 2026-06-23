@@ -1,0 +1,826 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1"
+    />
+    <title>Calculadora de nómina</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Nómina" />
+    <meta name="theme-color" content="#1ba163" />
+    <link
+      rel="apple-touch-icon"
+      href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj48cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgcng9IjQwIiBmaWxsPSIjMWJhMTYzIi8+PHRleHQgeD0iOTAiIHk9IjEyNiIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEwIiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+4oKsPC90ZXh0Pjwvc3ZnPg=="
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        font-family:
+          "Manrope",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          system-ui,
+          sans-serif;
+        color: #14211a;
+        background: #eef2ef;
+        padding: env(safe-area-inset-top) env(safe-area-inset-right)
+          env(safe-area-inset-bottom) env(safe-area-inset-left);
+        -webkit-text-size-adjust: 100%;
+      }
+      input {
+        font-family: inherit;
+      }
+      input[type="number"]::-webkit-outer-spin-button,
+      input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      input[type="number"] {
+        -moz-appearance: textfield;
+      }
+      input:focus {
+        outline: none;
+      }
+      .wrap {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 22px 16px 48px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .logo {
+        width: 42px;
+        height: 42px;
+        border-radius: 13px;
+        background: #1ba163;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 18px;
+        letter-spacing: -0.02em;
+        box-shadow: 0 6px 16px -6px rgba(26, 161, 99, 0.6);
+      }
+      .title {
+        font-size: 18px;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+        line-height: 1.1;
+      }
+      .sub {
+        font-size: 12.5px;
+        font-weight: 600;
+        color: #8a948e;
+        margin-top: 1px;
+      }
+      .seg {
+        display: flex;
+        background: #e3eae6;
+        border-radius: 11px;
+        padding: 3px;
+        gap: 3px;
+      }
+      .seg button {
+        border: 0;
+        background: transparent;
+        font-family: inherit;
+        font-weight: 700;
+        font-size: 13px;
+        color: #6b756e;
+        padding: 7px 13px;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+      .seg button.on {
+        background: #fff;
+        color: #137a4a;
+        box-shadow: 0 1px 3px rgba(20, 40, 30, 0.12);
+      }
+
+      .card {
+        background: #fff;
+        border-radius: 22px;
+        box-shadow:
+          0 1px 3px rgba(20, 40, 30, 0.05),
+          0 22px 50px -22px rgba(20, 40, 30, 0.22);
+        overflow: hidden;
+      }
+
+      .hero {
+        padding: 26px 22px 24px;
+        background: #f6faf8;
+        border-bottom: 1px solid #edf1ee;
+      }
+      .hero-label {
+        font-size: 12px;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: #7c8a82;
+        font-weight: 700;
+      }
+      .neto {
+        font-size: 46px;
+        font-weight: 800;
+        color: #137a4a;
+        letter-spacing: -0.025em;
+        line-height: 1.02;
+        margin-top: 8px;
+        font-variant-numeric: tabular-nums;
+      }
+      .annual {
+        display: flex;
+        gap: 14px;
+        margin-top: 18px;
+      }
+      .annual .box {
+        flex: 1;
+        background: #fff;
+        border: 1px solid #eaf0ec;
+        border-radius: 14px;
+        padding: 12px 14px;
+      }
+      .annual .cap {
+        font-size: 10.5px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: #9aa39c;
+        font-weight: 700;
+      }
+      .annual .val {
+        font-size: 20px;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+        margin-top: 3px;
+      }
+      .annual .val.neto {
+        color: #0f7a45;
+      }
+      .annual .val.bruto {
+        color: #36c088;
+      }
+      .pagaNota {
+        font-size: 11.5px;
+        color: #9aa39c;
+        font-weight: 600;
+        margin-top: 10px;
+      }
+      .bar {
+        height: 13px;
+        border-radius: 99px;
+        background: #e3eae6;
+        overflow: hidden;
+        display: flex;
+        margin-top: 18px;
+      }
+      .bar > div {
+        background: #1ba163;
+        height: 100%;
+        transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .legend {
+        display: flex;
+        gap: 20px;
+        margin-top: 11px;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: #7c8a82;
+        flex-wrap: wrap;
+      }
+      .legend span {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 99px;
+      }
+
+      .section {
+        padding: 20px 22px 24px;
+      }
+      .section + .section {
+        border-top: 1px solid #edf1ee;
+      }
+      .sec-label {
+        font-size: 12px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #9aa39c;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 13px 0;
+        border-bottom: 1px solid #f0f3f1;
+      }
+      .row .name {
+        font-size: 15px;
+        font-weight: 600;
+        color: #1c2a22;
+      }
+      .row .hint {
+        font-size: 12.5px;
+        color: #8a948e;
+        margin-top: 5px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+        line-height: 1;
+      }
+      .amt {
+        font-size: 15px;
+        font-weight: 700;
+        color: #1c2a22;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+      .amt.muted {
+        color: #5b675f;
+      }
+
+      .mini {
+        font-size: 13px;
+        font-weight: 700;
+        color: #5b675f;
+        background: #fff;
+        border: 1px solid #e2e7e3;
+        border-radius: 8px;
+        padding: 6px 8px;
+        width: 84px;
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+      .mini.s {
+        width: 56px;
+      }
+      .mini.xs {
+        width: 48px;
+      }
+      .mini:focus {
+        border-color: #1ba163;
+      }
+      .inp {
+        width: 118px;
+        text-align: right;
+        font-weight: 700;
+        font-size: 16px;
+        color: #137a4a;
+        background: #eef7f1;
+        border: 1px solid #d8ebe0;
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-variant-numeric: tabular-nums;
+      }
+      .inp:focus {
+        border-color: #1ba163;
+        background: #fff;
+      }
+      .chk {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: #5b675f;
+        font-weight: 600;
+      }
+      .chk input {
+        accent-color: #1ba163;
+        width: 17px;
+        height: 17px;
+        margin: 0;
+      }
+      .irpf {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .irpf .inp {
+        width: 78px;
+      }
+      .pctsign {
+        font-size: 14px;
+        font-weight: 700;
+        color: #8a948e;
+      }
+
+      .total {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 16px 0 2px;
+        margin-top: 6px;
+        border-top: 2px solid #e7ece8;
+      }
+      .total .name {
+        font-size: 15px;
+        font-weight: 800;
+        color: #14211a;
+      }
+      .total .amt {
+        font-size: 20px;
+        font-weight: 800;
+      }
+
+      .foot {
+        font-size: 12px;
+        color: #a3aca5;
+        font-weight: 500;
+        text-align: center;
+        line-height: 1.5;
+      }
+      .reset {
+        margin: 2px auto 0;
+        border: 1px solid #dfe5e1;
+        background: #fff;
+        color: #6b756e;
+        font-family: inherit;
+        font-weight: 700;
+        font-size: 13px;
+        padding: 9px 16px;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+      .reset:active {
+        background: #f4f6f4;
+      }
+
+      @media (min-width: 560px) {
+        .cols {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+        }
+        .cols .section + .section {
+          border-top: 0;
+          border-left: 1px solid #edf1ee;
+        }
+        .neto {
+          font-size: 54px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="topbar">
+        <div class="brand">
+          <div class="logo">€</div>
+          <div>
+            <div class="title">Calculadora de nómina</div>
+            <div class="sub">Neto mensual · bruto anual</div>
+          </div>
+        </div>
+        <div class="seg" id="pagasSeg">
+          <button data-pagas="12">12 pagas</button>
+          <button data-pagas="14" class="on">14 pagas</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="hero">
+          <div class="hero-label">Salario neto mensual</div>
+          <div class="neto" id="neto">—</div>
+          <div class="annual">
+            <div class="box">
+              <div class="cap">Neto al año</div>
+              <div class="val neto" id="anualNeto">—</div>
+            </div>
+            <div class="box">
+              <div class="cap">Bruto al año</div>
+              <div class="val bruto" id="anualBruto">—</div>
+            </div>
+          </div>
+          <div class="pagaNota" id="pagaNota"></div>
+          <div class="bar"><div id="bar" style="width: 50%"></div></div>
+          <div class="legend">
+            <span
+              ><span class="dot" style="background: #1ba163"></span>Neto
+              <span id="netoPct"></span
+            ></span>
+            <span
+              ><span class="dot" style="background: #cdd6d0"></span>Descuentos
+              <span id="descPctShare"></span
+            ></span>
+          </div>
+        </div>
+
+        <div class="cols">
+          <div class="section">
+            <div class="sec-label">Ingresos</div>
+
+            <div class="row">
+              <div>
+                <div class="name">Salario base</div>
+                <div class="hint">
+                  <span style="display: flex; align-items: center; gap: 5px"
+                    >Bruto
+                    <input
+                      class="mini"
+                      id="bruto"
+                      type="number"
+                      inputmode="decimal"
+                      step="0.01"
+                      placeholder="0,00"
+                    />
+                    €</span
+                  >
+                </div>
+                <div class="hint" style="margin-top: 8px">
+                  <label class="chk"
+                    ><input type="checkbox" id="ajusteOn" /> Restar</label
+                  >
+                  <input
+                    class="mini s"
+                    id="ajusteImporte"
+                    type="number"
+                    inputmode="decimal"
+                    step="0.01"
+                    placeholder="0,00"
+                  />
+                  €
+                </div>
+              </div>
+              <span class="amt" id="baseAmt">—</span>
+            </div>
+
+            <div class="row">
+              <div>
+                <div class="name">Horas extra</div>
+                <div class="hint">
+                  <input
+                    class="mini s"
+                    id="horas"
+                    type="number"
+                    inputmode="decimal"
+                    step="0.5"
+                    placeholder="0"
+                  />
+                  h ×
+                  <input
+                    class="mini xs"
+                    id="horaRate"
+                    type="number"
+                    inputmode="decimal"
+                    step="0.01"
+                    placeholder="€/h"
+                  />
+                  €
+                </div>
+              </div>
+              <span class="amt" id="horasAmt">—</span>
+            </div>
+
+            <div class="row">
+              <div>
+                <div class="name">Ingresos extra</div>
+                <div class="hint">Pluses, bonus…</div>
+              </div>
+              <input
+                class="inp"
+                id="ingresos"
+                type="number"
+                inputmode="decimal"
+                step="0.01"
+                placeholder="0,00"
+              />
+            </div>
+
+            <div class="row">
+              <div>
+                <div class="name">Simula subida</div>
+                <div class="hint">Prueba un aumento</div>
+              </div>
+              <input
+                class="inp"
+                id="simula"
+                type="number"
+                inputmode="decimal"
+                step="0.01"
+                placeholder="0,00"
+              />
+            </div>
+
+            <div class="row">
+              <div>
+                <div class="name">Dieta</div>
+                <div class="hint">
+                  <input
+                    class="mini xs"
+                    id="dietaDias"
+                    type="number"
+                    inputmode="numeric"
+                    step="1"
+                    placeholder="0"
+                  />
+                  días ×
+                  <input
+                    class="mini xs"
+                    id="dietaImp"
+                    type="number"
+                    inputmode="decimal"
+                    step="0.01"
+                    placeholder="€"
+                  />
+                  €
+                </div>
+              </div>
+              <span class="amt" id="dietaAmt">—</span>
+            </div>
+
+            <div class="total">
+              <span class="name">Salario bruto</span>
+              <span class="amt" id="brutoAmt">—</span>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="sec-label">Descuentos</div>
+
+            <div class="row">
+              <div>
+                <div class="name">Contingencias comunes</div>
+                <div class="hint">Seguridad Social</div>
+              </div>
+              <span class="amt muted">4,85 %</span>
+            </div>
+
+            <div class="row">
+              <div>
+                <div class="name">Desempleo y FP</div>
+                <div class="hint">Cotización</div>
+              </div>
+              <span class="amt muted">1,65 %</span>
+            </div>
+
+            <div class="row">
+              <div>
+                <div class="name">IRPF</div>
+                <div class="hint">Retención editable</div>
+              </div>
+              <div class="irpf">
+                <input
+                  class="inp"
+                  id="irpf"
+                  type="number"
+                  inputmode="decimal"
+                  step="0.5"
+                  placeholder="0"
+                />
+                <span class="pctsign">%</span>
+              </div>
+            </div>
+
+            <div class="row">
+              <span style="font-size: 14px; font-weight: 600; color: #8a948e"
+                >Tipo de retención total</span
+              >
+              <span class="amt muted" id="descPct">—</span>
+            </div>
+
+            <div class="total">
+              <span class="name">Total descuentos</span>
+              <span class="amt muted" id="descAmt">—</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="reset" id="reset">Restablecer valores</button>
+      <div class="foot">
+        Edita los campos y se recalcula al instante.<br />Tus datos se guardan
+        solo en este dispositivo.
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        "use strict";
+        var DEFAULTS = {
+          bruto: "",
+          horas: "",
+          horaRate: "",
+          ingresos: "",
+          simula: "",
+          dietaDias: "",
+          dietaImp: "",
+          irpf: "",
+          ajusteOn: false,
+          ajusteImporte: "",
+          pagas: 14,
+        };
+        var KEY = "calculadora-nomina-v1";
+
+        var state = load();
+
+        function load() {
+          try {
+            var s = JSON.parse(localStorage.getItem(KEY));
+            if (s && typeof s === "object") {
+              return Object.assign({}, DEFAULTS, s);
+            }
+          } catch (e) {}
+          return Object.assign({}, DEFAULTS);
+        }
+        function save() {
+          try {
+            localStorage.setItem(KEY, JSON.stringify(state));
+          } catch (e) {}
+        }
+
+        var eurFmt = new Intl.NumberFormat("es-ES", {
+          style: "currency",
+          currency: "EUR",
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+        var pctFmt = new Intl.NumberFormat("es-ES", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+        function eur(n) {
+          return eurFmt.format(n || 0);
+        }
+        function pct(n) {
+          return pctFmt.format(n || 0) + " %";
+        }
+        function $(id) {
+          return document.getElementById(id);
+        }
+
+        function compute() {
+          var s = state;
+          var bruto = num(s.bruto);
+          var horas = num(s.horas);
+          var horaRate = num(s.horaRate);
+          var ingresos = num(s.ingresos);
+          var simula = num(s.simula);
+          var dietaDias = num(s.dietaDias);
+          var dietaImp = num(s.dietaImp);
+          var irpf = num(s.irpf);
+          var ajusteImporte = num(s.ajusteImporte);
+          var pagas = num(s.pagas) || 12;
+          var extraPagas = Math.max(0, pagas - 12);
+          var FIJO = 4.85 + 1.65;
+          var base = s.ajusteOn ? bruto - ajusteImporte : bruto;
+          var horasEur = horas * horaRate;
+          var dietaEur = dietaDias * dietaImp;
+          var brutoTotal = base + horasEur + ingresos + simula + dietaEur;
+          var brutoSinHoras = brutoTotal - horasEur;
+          var descPct = FIJO + irpf;
+          var descEur = (brutoTotal * descPct) / 100;
+          var neto = brutoTotal - descEur;
+          var factorExtra = 1 - irpf / 100; // pagas extra: solo IRPF
+          var anualBruto = 12 * brutoTotal + extraPagas * brutoSinHoras;
+          var anual = 12 * neto + extraPagas * (brutoSinHoras * factorExtra);
+          var netoPct =
+            brutoTotal > 0
+              ? Math.max(0, Math.min(100, (neto / brutoTotal) * 100))
+              : 0;
+          return {
+            base: base,
+            horasEur: horasEur,
+            dietaEur: dietaEur,
+            brutoTotal: brutoTotal,
+            descPct: descPct,
+            descEur: descEur,
+            neto: neto,
+            anual: anual,
+            anualBruto: anualBruto,
+            netoPct: netoPct,
+            extraPagas: extraPagas,
+          };
+        }
+
+        function render() {
+          var c = compute();
+          $("neto").textContent = eur(c.neto);
+          $("anualNeto").textContent = eur(c.anual);
+          $("anualBruto").textContent = eur(c.anualBruto);
+          $("pagaNota").textContent =
+            c.extraPagas > 0
+              ? "12 meses con horas · " +
+                c.extraPagas +
+                " pagas extra sin horas, solo IRPF"
+              : "";
+          $("bar").style.width = c.netoPct + "%";
+          $("netoPct").textContent = pct(c.netoPct);
+          $("descPctShare").textContent = pct(100 - c.netoPct);
+          $("baseAmt").textContent = eur(c.base);
+          $("horasAmt").textContent = eur(c.horasEur);
+          $("dietaAmt").textContent = eur(c.dietaEur);
+          $("brutoAmt").textContent = eur(c.brutoTotal);
+          $("descPct").textContent = pct(c.descPct);
+          $("descAmt").textContent = "− " + eur(c.descEur);
+        }
+
+        // Fill inputs from state
+        function fillInputs() {
+          $("bruto").value = state.bruto;
+          $("ajusteOn").checked = state.ajusteOn;
+          $("ajusteImporte").value = state.ajusteImporte;
+          $("horas").value = state.horas;
+          $("horaRate").value = state.horaRate;
+          $("ingresos").value = state.ingresos;
+          $("simula").value = state.simula;
+          $("dietaDias").value = state.dietaDias;
+          $("dietaImp").value = state.dietaImp;
+          $("irpf").value = state.irpf;
+          var btns = document.querySelectorAll("#pagasSeg button");
+          for (var i = 0; i < btns.length; i++) {
+            btns[i].classList.toggle(
+              "on",
+              parseInt(btns[i].getAttribute("data-pagas"), 10) === state.pagas,
+            );
+          }
+        }
+
+        function num(v) {
+          var n = parseFloat(String(v).replace(",", "."));
+          return isNaN(n) ? 0 : n;
+        }
+
+        function bindNum(id, field) {
+          $(id).addEventListener("input", function (e) {
+            state[field] = num(e.target.value);
+            save();
+            render();
+          });
+        }
+        bindNum("bruto", "bruto");
+        bindNum("ajusteImporte", "ajusteImporte");
+        bindNum("horas", "horas");
+        bindNum("horaRate", "horaRate");
+        bindNum("ingresos", "ingresos");
+        bindNum("simula", "simula");
+        bindNum("dietaDias", "dietaDias");
+        bindNum("dietaImp", "dietaImp");
+        bindNum("irpf", "irpf");
+
+        $("ajusteOn").addEventListener("change", function (e) {
+          state.ajusteOn = e.target.checked;
+          save();
+          render();
+        });
+
+        document.querySelectorAll("#pagasSeg button").forEach(function (b) {
+          b.addEventListener("click", function () {
+            state.pagas = parseInt(b.getAttribute("data-pagas"), 10);
+            document.querySelectorAll("#pagasSeg button").forEach(function (x) {
+              x.classList.remove("on");
+            });
+            b.classList.add("on");
+            save();
+            render();
+          });
+        });
+
+        $("reset").addEventListener("click", function () {
+          state = Object.assign({}, DEFAULTS);
+          save();
+          fillInputs();
+          render();
+        });
+
+        fillInputs();
+        render();
+      })();
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </body>
+</html>
