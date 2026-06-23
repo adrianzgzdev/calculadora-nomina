@@ -15,8 +15,6 @@ Aplicación web ligera para estimar el **salario neto mensual** y el **bruto/net
 
 ## 📸 Captura
 
-## 📸 Captura
-
 ![Captura de la calculadora](docs/captura.png)
 
 ## ✨ Características
