@@ -11,8 +11,6 @@ Aplicación web ligera para estimar el **salario neto mensual** y el **bruto/net
 
 👉 **[Ver la calculadora en vivo](https://adrianzgzdev.com/calculadora-nomina/)**
 
-> La demo estará activa una vez habilites GitHub Pages (Settings → Pages).
-
 ## 📸 Captura
 
 ![Captura de la calculadora](docs/captura.png)
