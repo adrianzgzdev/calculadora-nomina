@@ -698,7 +698,7 @@
           var horasEur = horas * horaRate;
           var dietaEur = dietaDias * dietaImp;
           var brutoTotal = base + horasEur + ingresos + simula + dietaEur;
-          var brutoSinHoras = brutoTotal - horasEur;
+          var brutoSinHoras = base; // pagas extra: solo salario base bruto
           var descPct = FIJO + irpf;
           var descEur = (brutoTotal * descPct) / 100;
           var neto = brutoTotal - descEur;
